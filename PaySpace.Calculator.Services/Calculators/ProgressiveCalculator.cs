@@ -7,8 +7,8 @@ internal sealed class ProgressiveCalculator(ICalculatorSettingsService calculato
     /// <inheritdoc/>
     public async Task<CalculateResult> CalculateAsync(decimal income, CancellationToken cancellationToken)
     {
-        var settings = await calculatorSettingsService.GetSettingsAsync(CalculatorType.FlatValue);
-        if (settings == null) throw new SettingsException();
+        var settings = await calculatorSettingsService.GetSettingsAsync(CalculatorType.Progressive);
+        if (settings.Count == 0) throw new SettingsException();
         decimal taxAmount = 0.0m;
         foreach (var taxlevel in settings.Where(x => income >= x.From).OrderBy(o => o.From))
         {
