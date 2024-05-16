@@ -1,0 +1,116 @@
+﻿@model CalculatorViewModel
+
+@{
+    ViewBag.Title = "Calculator";
+    Layout = "_Layout";
+}
+
+<h2>Calculate Tax</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-3 mb-3 mb-sm-0"></div>
+    <div class="col-sm-6">
+        <div class="card border-primary mb-3">
+            <div class="card-header bg-transparent border-primary">
+                <h3 class="card-title">Enter tax details</h3>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("CalculateTax", "Calculator", FormMethod.Post, new { id = "taxForm", name = "taxForm" }))
+                {
+                    <div class="card-text">
+                        <fieldset>
+                            <label for="PostalCodes">Select Postal Code:</label>
+                            <div class="form-floating mb-3">
+                                @Html.DropDownListFor(m => m.PostalCode, Model.PostalCodes, "--Select--",
+                                         new
+                                         {
+                                             @class = "dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 shadow w-100"
+                                         })
+                            </div>
+                            <div class="form-floating mb-3">
+                                @Html.EditorFor(model => model.Income, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.LabelFor(model => model.Income, new { @class = "control-label", @for = "Income" })
+                            </div>
+
+                            @if (ViewData.ModelState["PostalCode"] != null && ViewData.ModelState["PostalCode"]!.Errors.Any())
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @Html.ValidationMessageFor(model => model.PostalCode)
+                                </div>
+                            }
+                            @if (ViewData.ModelState["Income"] != null && ViewData.ModelState["Income"]!.Errors.Any())
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @Html.ValidationMessageFor(model => model.Income)
+                                </div>
+                            }
+                            <div class="card-footer bg-transparent border-0">
+                                <input class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit" value="Calculate" />
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @Html.ValidationSummary(true)
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 mb-3 mb-sm-0"></div>
+</div>
+
+
+
+@{
+    if (ViewBag.ShowTax == true)
+    {
+        <div class="row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <div class="card border-secondary mb-3">
+                    <div class="card-header bg-transparent border-secondary">
+                        <h3 class="card-title">Selection</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3 row">
+                                <label for="staticCalc" class="col-sm-3 col-form-label fw-bold">Type</label>
+                                <div class="col-sm-9">
+                                    @Html.EditorFor(model => model.PostalCode, new { htmlAttributes = new { @type = "text", @readonly = "readonly", @class = "form-control-plaintext", @id = "PostalCode" } })
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="staticIncome" class="col-sm-3 col-form-label fw-bold">Income</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticIncome" value=@Model.Income>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card border-success mb-3">
+                    <div class="card-header bg-transparent border-success">
+                        <h3 class="card-title">Your tax</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="mb-3 row">
+                                <label for="staticCalc" class="col-sm-3 col-form-label fw-bold">Type</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticCalc" value=@ViewBag.Calculator>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="staticTax" class="col-sm-3 col-form-label fw-bold">Amount</label>
+                                <div class="col-sm-9">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticTax" value=@ViewBag.Tax>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

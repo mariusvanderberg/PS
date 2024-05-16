@@ -1,0 +1,76 @@
+@model CalculatorHistoryViewModel
+
+@{
+    ViewBag.Title = "Calculator History";
+    Layout = "_Layout";
+}
+
+<h2>Tax History</h2>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Postal Code</th>
+        <th scope="col">Income</th>
+        <th scope="col">Tax</th>
+        <th scope="col">Calculator</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model?.CalculatorHistory?.Data ?? new List<PaySpace.Calculator.Web.Services.Models.CalculatorHistory>())
+        {
+            <tr>
+                <th scope="row">@history.Timestamp</th>
+                <td>@history.PostalCode</td>
+                <td>@history.Income</td>
+                <td>@history.Tax</td>
+                <td>@history.Calculator</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* Pager *@
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @* Marius' pager. Best way I could *@
+        @if (ViewBag.Page == 1)
+        {
+            <li class="page-item disabled">
+                @Html.ActionLink("Previous", "History", new { page = ViewBag.Page - 1 }, new { @class = "page-link" })
+            </li>
+        } else
+        {
+            <li class="page-item">
+                @Html.ActionLink("Previous", "History", new { page = ViewBag.Page - 1 }, new { @class = "page-link" })
+            </li>
+        }
+
+        @{
+            for (int i = 1; i < ViewBag.Total + 1; i++)
+            {
+                if (ViewBag.Page == i)
+                {
+                    <li class="page-item active">@Html.ActionLink($"{i}", "History", new { page = i }, new { @class = $"page-link" })</li>
+                } else
+                {
+                    <li class="page-item">@Html.ActionLink($"{i}", "History", new { page = i }, new { @class = $"page-link" })</li>
+                }
+            }
+        }
+        
+        @if (ViewBag.Page == ViewBag.Total)
+        {
+            <li class="page-item disabled">
+                @Html.ActionLink("Next", "History", new { page = ViewBag.Page + 1 }, new { @class = "page-link" })
+            </li>
+        }
+        else
+        {
+            <li class="page-item">
+                @Html.ActionLink("Next", "History", new { page = ViewBag.Page + 1 }, new { @class = "page-link" })
+            </li>
+        }
+    </ul>
+</nav>
